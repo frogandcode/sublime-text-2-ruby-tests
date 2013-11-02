@@ -92,6 +92,14 @@ class TestMethodMatcher(object):
         test_name = test_name.replace("\"", "").replace(" ", "_").replace('\N', '')
         return re.sub('_+', '_', test_name)
 
+      match_obj = re.search('\s?(([\"][^\"]*[\"]|[\'][^\']*[\'])\s+ti)', test_file_content) # 3rd search for 'it "name"'
+      if match_obj:
+        test_name = match_obj.group(1)[::-1]
+        test_name = test_name.replace("\"", "").replace('\N', '')
+        # MiniTest specs format: test_0001_description without underscores
+        test_name = "/test_.{4}_" + test_name.replace('it ', '', 1) + "/"
+        return test_name
+
       return None
 
   class ShouldaTest(object):
